@@ -48,7 +48,6 @@ pipeline {
              steps {
                     sh "
                     echo my env is ${envName}
-                    echo my region is ${REGION}
                     "
                }    
             }
