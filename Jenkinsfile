@@ -1,8 +1,5 @@
 ///////////Variables///////////
 
-
-
-pipeline {
 def appName = "nodejsnginx"
 def envName = "dev"
 def k8sNamespace = "dev"
@@ -12,6 +9,9 @@ def s3configbucket = "configmap-variables-prince"
 def REGION = "us-east-1"
 def AWS_ACCOUNT = "897585983198"
 def CONTAINER = "sample-nodejs"
+
+pipeline {
+
     agent {
         node {
             label 'slave01'
@@ -46,15 +46,14 @@ def CONTAINER = "sample-nodejs"
 
         stage ('Deploy image to ECR') {
              steps {
-                 
-                    sh ''' 
+                    sh """
                     echo "my env is ${envName}" 
                     $(aws ecr get-login --region ${REGION} --no-include-email)
                     docker tag ${CONTAINER}:v-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
                     docker push ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
 #############           docker tag ${CONTAINER}:latest ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:latest
 #############           docker push ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:latest
-                    '''
+                    """
                }    
             }
 
