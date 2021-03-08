@@ -17,6 +17,13 @@ pipeline {
         }
     }  
     stages {       
+
+        stage ('Print variable') {
+            steps {
+        echo "My variable is ${eksCluster}"
+            }
+        }
+
         stage('Prepare') {
             steps {
                 checkout([$class: 'GitSCM', 
@@ -35,12 +42,6 @@ pipeline {
                 cd docker_nodejs_nginx
                 docker build -t sample-nodejs:v-${BUILD_ID} .
                 '''                
-            }
-        }
-
-        stage ("Print variable") {
-            steps {
-        echo "My variable is ${eksCluster}"
             }
         }
 
