@@ -2,7 +2,7 @@
 pipeline {
 
     agent {
- //       node 
+        node {
         def appName = "nodejsnginx"
         def envName = "dev"
         def k8sNamespace = "dev"
@@ -12,6 +12,7 @@ pipeline {
         def REGION = "us-east-1"
         def AWS_ACCOUNT = "897585983198"
         def CONTAINER = "sample-nodejs"
+        }
         
         {
             label 'slave01'
