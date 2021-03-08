@@ -1,19 +1,17 @@
 ///////////Variables///////////
+def appName = "nodejsnginx"
+def envName = "dev"
+def k8sNamespace = "dev"
+def eksCluster = "sample-eks"
+def s3secretbucket = "configmap-variables-prince"
+def s3configbucket = "configmap-variables-prince"
+def REGION = "us-east-1"
+def AWS_ACCOUNT = "897585983198"
+def CONTAINER = "sample-nodejs"
+
 pipeline {
 
-    agent {
-        node {
-        def appName = "nodejsnginx"
-        def envName = "dev"
-        def k8sNamespace = "dev"
-        def eksCluster = "sample-eks"
-        def s3secretbucket = "configmap-variables-prince"
-        def s3configbucket = "configmap-variables-prince"
-        def REGION = "us-east-1"
-        def AWS_ACCOUNT = "897585983198"
-        def CONTAINER = "sample-nodejs"
-        }
-        
+    agent {      
         {
             label 'slave01'
         }
@@ -33,17 +31,18 @@ pipeline {
     
         stage ('Docker_Build') {
             steps {
-                sh '''cd docker_nodejs_nginx
+                sh '''
+                cd docker_nodejs_nginx
                 docker build -t sample-nodejs:v-${BUILD_ID} .
                 '''                
             }
         }
 
         stage ("Print variable") {
-      steps {
+            steps {
         echo "My variable is ${eksCluster}"
-      }
-    }
+            }
+        }
 
         stage ('Deploy image to ECR') {
              steps {
@@ -73,7 +72,7 @@ pipeline {
                 '''               
             }
         }
-        
+
         }               
 
     }
