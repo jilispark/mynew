@@ -15,7 +15,7 @@ pipeline {
         def eksCluster = "sample-eks"
         def s3secretbucket = "configmap-variables-prince"
         def s3configbucket = "configmap-variables-prince"
-        def REGION = "us-east-1"
+        def region = "us-east-1"
         def AWS_ACCOUNT = "897585983198"
         def CONTAINER = "sample-nodejs"
     }
@@ -44,13 +44,13 @@ pipeline {
 
         stage ('Deploy image to ECR') {
              steps {
-                    sh '
-                    $(aws ecr get-login --region ${env.REGION} --no-include-email)
+                    sh '''
+                    $(aws ecr get-login --region ${env.region} --no-include-email)
                     docker tag ${CONTAINER}:v-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
                     docker push ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
 #############       docker tag ${CONTAINER}:latest ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:latest
 #############       docker push ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:latest
-                    '
+                    '''
                }    
             }
 
