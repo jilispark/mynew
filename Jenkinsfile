@@ -7,8 +7,8 @@ pipeline {
             label 'slave01'
         }
     }
-
-    enviornment {
+    
+    environment {
         def appName = "nodejsnginx"
         def envName = "dev"
         def k8sNamespace = "dev"
