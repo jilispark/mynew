@@ -11,19 +11,12 @@ def CONTAINER = "sample-nodejs"
 
 pipeline {
 
-    agent {      
+    agent { 
         {
             label 'slave01'
         }
     }  
     stages {       
-
-        stage ('Print variable') {
-            steps {
-        echo "My variable is ${eksCluster}"
-            }
-        }
-
         stage('Prepare') {
             steps {
                 checkout([$class: 'GitSCM', 
