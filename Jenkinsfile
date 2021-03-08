@@ -10,9 +10,8 @@ def AWS_ACCOUNT = "897585983198"
 def CONTAINER = "sample-nodejs"
 
 pipeline {
-
     agent { 
-        {
+        node {
             label 'slave01'
         }
     }  
