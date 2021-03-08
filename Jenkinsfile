@@ -47,6 +47,7 @@ pipeline {
         stage ('Deploy image to ECR') {
              steps {
                     sh "echo ${envName}"
+                    sh "echo ${REGION}"
                     
                }    
             }
