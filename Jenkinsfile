@@ -37,7 +37,7 @@ pipeline {
             steps {
                 sh '''
                 cd docker_nodejs_nginx
-                docker build -t sample-nodejs:v-${env.region}-${BUILD_ID} .
+                docker build -t sample-nodejs:v-${region}-${BUILD_ID} .
                 '''                
             }
         }
