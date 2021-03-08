@@ -1,19 +1,19 @@
 ///////////Variables///////////
-
-def appName = "nodejsnginx"
-def envName = "dev"
-def k8sNamespace = "dev"
-def eksCluster = "sample-eks"
-def s3secretbucket = "configmap-variables-prince"
-def s3configbucket = "configmap-variables-prince"
-def REGION = "us-east-1"
-def AWS_ACCOUNT = "897585983198"
-def CONTAINER = "sample-nodejs"
-
 pipeline {
 
     agent {
-        node {
+ //       node 
+        def appName = "nodejsnginx"
+        def envName = "dev"
+        def k8sNamespace = "dev"
+        def eksCluster = "sample-eks"
+        def s3secretbucket = "configmap-variables-prince"
+        def s3configbucket = "configmap-variables-prince"
+        def REGION = "us-east-1"
+        def AWS_ACCOUNT = "897585983198"
+        def CONTAINER = "sample-nodejs"
+        
+        {
             label 'slave01'
         }
     }  
@@ -50,8 +50,8 @@ pipeline {
                     $(aws ecr get-login --region ${REGION} --no-include-email)
                     docker tag ${CONTAINER}:v-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
                     docker push ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
-#############           docker tag ${CONTAINER}:latest ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:latest
-#############           docker push ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:latest
+#############       docker tag ${CONTAINER}:latest ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:latest
+#############       docker push ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:latest
                     """
                }    
             }
