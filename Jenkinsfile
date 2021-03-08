@@ -1,6 +1,3 @@
-///////////Variables///////////
-
-
 pipeline {
     agent { 
         node {
@@ -59,8 +56,8 @@ pipeline {
                 sh '''
                 pwd
                 ls -l           
-                aws s3 cp s3://configmap-variables-prince/default.conf .
-                aws s3 cp s3://configmap-variables-prince/local_env.yaml .
+                aws s3 cp s3://${s3secretbucket}/default.conf .
+                aws s3 cp s3://${s3secretbucket}/local_env.yaml .
                 ls -l
                 aws eks --region ${region} update-kubeconfig --name ${eksCluster}
                 
