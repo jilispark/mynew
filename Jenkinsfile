@@ -62,11 +62,11 @@ pipeline {
                 aws s3 cp s3://configmap-variables-prince/default.conf .
                 aws s3 cp s3://configmap-variables-prince/local_env.yaml .
                 ls -l
-                aws eks --region us-east-1 update-kubeconfig --name sample-eks
+                aws eks --region us-east-1 update-kubeconfig --name ${eksCluster}
                 
-                kubectl create cm app-properties-${BUILD_ID} --from-file=local_env.yaml -n dev
-                kubectl create cm nginx-config-${BUILD_ID} --from-file=default.conf -n dev
-                aws s3 cp local_env.yaml s3://${s3ConfigBucket}/${appname}/${env.BUILD_ID}                    
+                kubectl create cm app-properties-${BUILD_ID} --from-file=local_env.yaml -n ${dev}
+                kubectl create cm nginx-config-${BUILD_ID} --from-file=default.conf -n ${dev}
+            #    aws s3 cp local_env.yaml s3://${s3ConfigBucket}/${appname}/${env.BUILD_ID}                    
                 '''               
             }
         }
