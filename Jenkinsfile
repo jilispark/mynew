@@ -45,7 +45,7 @@ pipeline {
         stage ('Deploy image to ECR') {
              steps {
                     sh '''
-                    $(aws ecr get-login --region ${env.region} --no-include-email)
+                    $(aws ecr get-login --region ${region} --no-include-email)
                     docker tag ${CONTAINER}:v-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
                     docker push ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
 #############       docker tag ${CONTAINER}:latest ${AWS_ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${CONTAINER}:latest
