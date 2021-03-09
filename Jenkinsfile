@@ -25,7 +25,7 @@ pipeline {
                 branches: [[name: '*/master']], 
                 extensions: [], 
                 userRemoteConfigs: [[
-                    url: 'https://github.com/princejoseph4043/nodejs_nginx_app.git']]
+                    url: 'https://github.com/princejoseph4043/nodejs_nginx_app_std.git']]
                 ])
 
             }
