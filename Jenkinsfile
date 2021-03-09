@@ -6,7 +6,7 @@ pipeline {
     }
     
     environment {
-        def appName = "nodejsnginx"
+        def APP_NAME = "nodejs-app-dev"
         def envName = "dev"
         def k8sNamespace = "dev"
         def eksCluster = "sample-eks"
@@ -14,7 +14,8 @@ pipeline {
         def s3configbucket = "configmap-variables-prince"
         def region = "us-east-1"
         def AWS_ACCOUNT = "897585983198"
-        def CONTAINER = "sample-nodejs"        
+        def CONTAINER = "sample-nodejs"
+        def ARGOCD_SERVER= "a124d6af24d234dd5889feb1735904cb-1188587285.us-east-1.elb.amazonaws.com"        
     }
 
     stages {       
@@ -63,11 +64,43 @@ pipeline {
                 
                 kubectl create cm app-properties-${BUILD_ID} --from-file=local_env.yaml -n ${k8sNamespace}
                 kubectl create cm nginx-config-${BUILD_ID} --from-file=default.conf -n ${k8sNamespace}
-                aws s3 cp local_env.yaml s3://${s3configbucket}/${appName}/${BUILD_ID}/local_env.yaml                    
-                '''               
+                aws s3 cp local_env.yaml s3://${s3configbucket}/${APP_NAME}/${BUILD_ID}/local_env.yaml                    
+                '''              
             }
         }
+
+        stage('Prepare') {
+            steps {
+                checkout([$class: 'GitSCM', 
+                branches: [[name: '*/master']], 
+                extensions: [], 
+                userRemoteConfigs: [[
+                    url: 'https://github.com/princejoseph4043/argocd_kube_deploy.git']]
+                ])
+
+            }
+        }
+
+        stage ('Deploy_K8S') {
+            steps {
+                withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
+                sh '''
+                    $(aws ecr get-login --region ${region} --no-include-email)
+                    IMAGE_DIGEST=$(docker image inspect ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/$CONTAINER:latest -f '{{join .RepoDigests ","}}')
+                        
+                    # Customize image 
+                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app set ${APP_NAME} --kustomize-image $IMAGE_DIGEST
+                        
+                    # Deploy to ArgoCD
+                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app sync ${APP_NAME} --force
+                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app wait ${APP_NAME} --timeout 600
+                    '''
+               }
+            }   
+
 
         }               
 
     }
+
+}
