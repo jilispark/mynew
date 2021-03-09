@@ -63,7 +63,7 @@ pipeline {
                 
                 kubectl create cm app-properties-${BUILD_ID} --from-file=local_env.yaml -n ${k8sNamespace}
                 kubectl create cm nginx-config-${BUILD_ID} --from-file=default.conf -n ${k8sNamespace}
-            #    aws s3 cp local_env.yaml s3://${s3ConfigBucket}/${appname}/${env.BUILD_ID}                    
+                aws s3 cp local_env.yaml s3://${s3configbucket}/${appName}/${BUILD_ID}                    
                 '''               
             }
         }
