@@ -1,1 +1,1 @@
-# nodejs_nginx_app_std
+# nodejs_nginx_app_dev_std
