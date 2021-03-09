@@ -86,7 +86,7 @@ pipeline {
                 withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
                 sh '''
                     $(aws ecr get-login --region ${region} --no-include-email)
-                    IMAGE_DIGEST=$(docker image inspect ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/$CONTAINER:v-${BUILD_ID} -f '{{join .RepoDigests ","}}')
+                    IMAGE_DIGEST=$(docker image inspect ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/$CONTAINER:latest -f '{{join .RepoDigests ","}}')
                         
                     # Customize image 
                     ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app set ${APP_NAME} --kustomize-image $IMAGE_DIGEST
