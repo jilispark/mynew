@@ -35,7 +35,7 @@ pipeline {
             steps {
                 sh '''
                 cd docker_nodejs_nginx
-                docker build -t sample-nodejs:v-${BUILD_ID} .
+                docker build -t ${CONTAINER} .
                 '''                
             }
         }
@@ -44,9 +44,9 @@ pipeline {
              steps {
                     sh '''
                     $(aws ecr get-login --region ${region} --no-include-email)
-                    docker tag ${CONTAINER}:v-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
-                    docker push ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
-                    docker tag ${CONTAINER}:v-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:latest
+ #                  docker tag ${CONTAINER}:v-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
+ #                  docker push ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
+                    docker tag ${CONTAINER}:latest ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:latest
                     docker push ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:latest
                     '''
                }    
