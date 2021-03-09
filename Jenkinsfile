@@ -69,7 +69,7 @@ pipeline {
             }
         }
 
-        stage('Prepare') {
+        stage('Checkout k8s files') {
             steps {
                 checkout([$class: 'GitSCM', 
                 branches: [[name: '*/master']], 
