@@ -55,7 +55,9 @@ pipeline {
             steps {
                 sh '''
                 pwd
-                ls -l           
+                ls -l  
+                timestamp = "date "+%Y%m%d%H%M"
+                echo "current time is $timestamp"         
                 aws s3 cp s3://${s3secretbucket}/default.conf .
                 aws s3 cp s3://${s3secretbucket}/local_env.yaml .
                 ls -l
