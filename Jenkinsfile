@@ -14,8 +14,7 @@ pipeline {
         def s3configbucket = "configmap-variables-prince"
         def region = "us-east-1"
         def AWS_ACCOUNT = "897585983198"
-        def CONTAINER = "sample-nodejs"
-        def timestamp = "date "+%Y%m%d%H%M""
+        def CONTAINER = "sample-nodejs"        
     }
 
     stages {       
@@ -56,9 +55,7 @@ pipeline {
             steps {
                 sh '''
                 pwd
-                ls -l  
-                
-                echo "current time is ${timestamp}"         
+                ls -l        
                 aws s3 cp s3://${s3secretbucket}/default.conf .
                 aws s3 cp s3://${s3secretbucket}/local_env.yaml .
                 ls -l
