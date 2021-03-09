@@ -107,7 +107,7 @@ pipeline {
                 sh '''        
                     # Customize Configmap
                     CONFIGMAP = nginx-config-${BUILD_ID}
-                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app set ${APP_NAME} --kustomize-configmap $CONFIGMAP
+                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app set ${APP_NAME} --kustomize-configmap ${CONFIGMAP}
                         
                     # Deploy to ArgoCD
                     ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app sync ${APP_NAME} --force
