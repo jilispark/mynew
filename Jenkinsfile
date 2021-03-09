@@ -81,7 +81,7 @@ pipeline {
             }
         }
 
-        stage ('Deploy_K8S') {
+        stage ('Deploy_K8S_image') {
             steps {
                 withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
                 sh '''
@@ -99,7 +99,25 @@ pipeline {
             }   
 
 
-        }               
+        }
+
+        stage ('Deploy_K8S_configmap') {
+            steps {
+                withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
+                sh '''        
+                    # Customize Configmap
+                    CONFIGMAP = nginx-config-${BUILD_ID}
+                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app set ${APP_NAME} --kustomize-configmap $CONFIGMAP
+                        
+                    # Deploy to ArgoCD
+                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app sync ${APP_NAME} --force
+                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app wait ${APP_NAME} --timeout 600
+                    '''
+               }
+            }   
+
+
+        }                  
 
     }
 
