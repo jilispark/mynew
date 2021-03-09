@@ -106,7 +106,7 @@ pipeline {
                 withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
                 sh '''        
                     # Customize Configmap
-                    CONFIGMAP = nginx-config-${BUILD_ID}
+                    #CONFIGMAP = nginx-config-${BUILD_ID}
                     ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app set ${APP_NAME} --kustomize-configmap nginx-config-96
                         
                     # Deploy to ArgoCD
