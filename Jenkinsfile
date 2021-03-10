@@ -44,8 +44,9 @@ pipeline {
              steps {
                     sh '''
                     $(aws ecr get-login --region ${region} --no-include-email)
-#                    docker tag ${CONTAINER}:v1-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
                     docker push ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v1-${BUILD_ID}
+
+#                    docker tag ${CONTAINER}:v1-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}                    
 #                    docker tag ${CONTAINER}-v-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:latest
 #                    docker push ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:latest
                     '''
@@ -109,5 +110,3 @@ pipeline {
         }                  
 
     }
-
-}
