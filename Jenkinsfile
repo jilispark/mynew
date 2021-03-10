@@ -35,7 +35,7 @@ pipeline {
             steps {
                 sh '''
                 cd docker_nodejs_nginx
-                docker build -t ${CONTAINER} .
+                docker build -t ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v1-${BUILD_ID} .
                 '''                
             }
         }
@@ -44,10 +44,10 @@ pipeline {
              steps {
                     sh '''
                     $(aws ecr get-login --region ${region} --no-include-email)
- #                  docker tag ${CONTAINER}:v-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
- #                  docker push ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
-                    docker tag ${CONTAINER}:latest ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:latest
-                    docker push ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:latest
+#                    docker tag ${CONTAINER}:v1-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}
+                    docker push ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v1-${BUILD_ID}
+#                    docker tag ${CONTAINER}-v-${BUILD_ID} ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:latest
+#                    docker push ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:latest
                     '''
                }    
             }
@@ -62,9 +62,11 @@ pipeline {
                 ls -l
                 aws eks --region ${region} update-kubeconfig --name ${eksCluster}
                 
-                kubectl create cm app-properties-${BUILD_ID} --from-file=local_env.yaml -n ${k8sNamespace}
-                kubectl create cm nginx-config-${BUILD_ID} --from-file=default.conf -n ${k8sNamespace}
-                aws s3 cp local_env.yaml s3://${s3configbucket}/${APP_NAME}/${BUILD_ID}/local_env.yaml                    
+                kubectl create cm app-properties-v1-${BUILD_ID} --from-file=local_env.yaml -n ${k8sNamespace}
+                kubectl create cm nginx-config-v1-${BUILD_ID} --from-file=default.conf -n ${k8sNamespace}
+                aws s3 cp local_env.yaml s3://${s3configbucket}/${APP_NAME}/${BUILD_ID}/local_env.yaml
+                rm -f local_env.yaml
+                rm -f default.conf                                     
                 '''              
             }
         }
@@ -74,27 +76,32 @@ pipeline {
                 checkout([$class: 'GitSCM', 
                 branches: [[name: '*/master']], 
                 extensions: [], 
-                userRemoteConfigs: [[
-                    url: 'https://github.com/princejoseph4043/argocd_kube_deploy.git']]
-                ])
-
+                userRemoteConfigs: [[credentialsId: '5fe89fbd-eece-401e-985f-9ddeaeaeb76a', 
+                url: 'git@github.com:princejoseph4043/argocd_kube_deploy_new.git']]])        
             }
         }
 
-        stage ('Deploy_K8S_image') {
+        stage ('Commit to Git Repo') {
             steps {
-                withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
                 sh '''
-                    $(aws ecr get-login --region ${region} --no-include-email)
-                    IMAGE_DIGEST=$(docker image inspect ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/$CONTAINER:latest -f '{{join .RepoDigests ","}}')
-                        
-                    # Customize image 
-                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app set ${APP_NAME} --kustomize-image $IMAGE_DIGEST
-                        
-                    # Deploy to ArgoCD
-                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app sync ${APP_NAME} --force
-                    ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app wait ${APP_NAME} --timeout 600
-                    '''
+                pwd
+                ls -l
+                cd $WORKSPACE
+                cat deployment-Service.yml
+                git config --global user.email "princejoseph4043@gmail.com"
+                git config --global user.name "Prince Joseph"                
+                git checkout master
+                git pull origin master
+                git branch
+                cat deployment-Service.yml                                               
+                sed -i "s|<IMAGE-ID>|${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}|g" deployment-Service.yml
+                sed -i "s|<CONFIGMAP-ID>|nginx-config-v1-${BUILD_ID}|g" deployment-Service.yml
+                cat deployment-Service.yml
+                                                      
+                # Automatic Deploy to ArgoCD
+#               ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app sync ${APP_NAME} --force
+#               ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app wait ${APP_NAME} --timeout 600
+                '''
                }
             }   
 
