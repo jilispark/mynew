@@ -78,7 +78,7 @@ pipeline {
                 branches: [[name: '*/master']], 
                 extensions: [], 
                 userRemoteConfigs: [[credentialsId: '5fe89fbd-eece-401e-985f-9ddeaeaeb76a', 
-                url: 'git@github.com:princejoseph4043/argocd_kube_deploy_new.git']]])        
+                url: 'git@github.com:princejoseph4043/argocd_kube_deploy.git']]])        
             }
         }
 
@@ -105,7 +105,6 @@ pipeline {
                 '''
                }
             }   
-
 
         }                  
 
