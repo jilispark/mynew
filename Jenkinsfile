@@ -99,9 +99,8 @@ pipeline {
                 git pull origin master
                 git branch
                 cat deployment-Service.yml
-                $(aws ecr get-login --region ${region} --no-include-email) 
-                IMAGE_DIGEST=$(docker image inspect ${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/$CONTAINER:v1-${BUILD_ID} -f '{{join .RepoDigests ","}}')                                              
-                sed -i -e "s|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs*|$IMAGE_DIGEST|g" deployment-Service.yml
+#                sed -i -e "s|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs*|$IMAGE_DIGEST|g" deployment-Service.yml
+                sed -e "s/v1-[a-z0-9A-Z]\{5\}/v1-$BUILD_ID/g" deployment-Service.yml
                 sed -i -e "s|nginx-config.*|nginx-config-v1-${BUILD_ID}|g" deployment-Service.yml
                 cat deployment-Service.yml
                 git add .
