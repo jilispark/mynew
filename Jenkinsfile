@@ -95,8 +95,8 @@ pipeline {
                 cat deployment-Service.yml
                 git config --global user.email "princejoseph4043@gmail.com"
                 git config --global user.name "Prince Joseph"                
-#                git checkout master
-                git pull origin master --allow-unrelated-histories
+                git checkout master
+                git pull origin master
                 git branch
                 cat deployment-Service.yml                                               
                 sed -i -e "s|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs*|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs:v1-${BUILD_ID}|g" deployment-Service.yml
@@ -104,7 +104,7 @@ pipeline {
                 cat deployment-Service.yml
                 git add .
                 git commit -m "${BUILD_ID}"
-                git push -f origin master                                                      
+                git push origin master                                                      
                 # Automatic Deploy to ArgoCD
 #               ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app sync ${APP_NAME} --force
 #               ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app wait ${APP_NAME} --timeout 600
