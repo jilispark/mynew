@@ -99,7 +99,7 @@ pipeline {
                 git pull origin master --allow-unrelated-histories
                 git branch
                 cat deployment-Service.yml                                               
-                sed -i -e "s|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs*|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs:v-${BUILD_ID}|g" deployment-Service.yml
+                sed -i -e "s|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs*|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs:v1-${BUILD_ID}|g" deployment-Service.yml
                 sed -i -e "s|nginx-config.*|nginx-config-v1-${BUILD_ID}|g" deployment-Service.yml
                 cat deployment-Service.yml
                 git add .
