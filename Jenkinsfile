@@ -79,7 +79,7 @@ pipeline {
                 extensions: [], 
                 userRemoteConfigs: [[credentialsId: '5fe89fbd-eece-401e-985f-9ddeaeaeb76a', 
                 url: 'git@github.com:princejoseph4043/argocd_kube_deploy.git']]])        
-            }
+            }         
         }
 
         stage ('Commit to Git Repo') {
@@ -92,7 +92,7 @@ pipeline {
                 git config --global user.email "princejoseph4043@gmail.com"
                 git config --global user.name "Prince Joseph"                
 #                git checkout master
-#                git pull origin master --allow-unrelated-histories
+                git pull origin master --allow-unrelated-histories
                 git branch
                 cat deployment-Service.yml                                               
                 sed -i -e "s|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs*|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs:v-${BUILD_ID}|g" deployment-Service.yml
