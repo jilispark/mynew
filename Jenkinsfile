@@ -92,8 +92,8 @@ pipeline {
                 git config --global user.email "princejoseph4043@gmail.com"
                 git config --global user.name "Prince Joseph"                
                 git checkout master
-                git pull origin master
-#                git branch
+                git pull origin master --allow-unrelated-histories
+                git branch
                 cat deployment-Service.yml                                               
                 sed -i "s|${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-*|${AWS_ACCOUNT}.dkr.ecr.${region}.amazonaws.com/${CONTAINER}:v-${BUILD_ID}|g" deployment-Service.yml
                 sed -i -e "s|nginx-config.*|nginx-config-v1-${BUILD_ID}|g" deployment-Service.yml
