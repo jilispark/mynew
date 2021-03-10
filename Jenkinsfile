@@ -91,7 +91,7 @@ pipeline {
                 sh '''
                 pwd
                 ls -l
-                cd $WORKSPACE
+                cd $WORKSPACE/kubernets-files
                 cat deployment-Service.yml
                 git config --global user.email "princejoseph4043@gmail.com"
                 git config --global user.name "Prince Joseph"                
