@@ -98,7 +98,9 @@ pipeline {
                 sed -i -e "s|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs*|897585983198.dkr.ecr.us-east-1.amazonaws.com/sample-nodejs:v-${BUILD_ID}|g" deployment-Service.yml
                 sed -i -e "s|nginx-config.*|nginx-config-v1-${BUILD_ID}|g" deployment-Service.yml
                 cat deployment-Service.yml
-                                                      
+                git add .
+                git commit -m "${BUILD_ID}"
+                git push origin master                                                      
                 # Automatic Deploy to ArgoCD
 #               ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app sync ${APP_NAME} --force
 #               ARGOCD_SERVER=${ARGOCD_SERVER} argocd --grpc-web app wait ${APP_NAME} --timeout 600
