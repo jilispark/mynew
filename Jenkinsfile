@@ -21,6 +21,7 @@ pipeline {
     stages {       
         stage('Prepare') {
             steps {
+                sh ''''''
                 checkout([$class: 'GitSCM', 
                 branches: [[name: '*/master']], 
                 extensions: [], 
@@ -74,12 +75,15 @@ pipeline {
 
         stage('Checkout k8s files') {
             steps {
+                dir('kubernets-files') {
                 checkout([$class: 'GitSCM', 
                 branches: [[name: '*/master']], 
                 extensions: [], 
                 userRemoteConfigs: [[credentialsId: '5fe89fbd-eece-401e-985f-9ddeaeaeb76a', 
                 url: 'git@github.com:princejoseph4043/argocd_kube_deploy.git']]])        
-            }         
+            
+                }
+            }       
         }
 
         stage ('Commit to Git Repo') {
